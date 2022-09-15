@@ -47,6 +47,18 @@ public class Intersection
         visible = false;
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        return equals((Intersection)obj);
+    }
+    public boolean equals(Intersection other){
+        if(this.getColor().equals(other.getColor())){
+            return true;
+        }else{
+            return false;
+        }
+    
+    }
     /**
      * An example of a method - replace this comment with your own
      * 
@@ -64,7 +76,7 @@ public class Intersection
     {
         return yPosition;
     }
-    public String color()
+    public String getColor()
     {
         return color;
     }
