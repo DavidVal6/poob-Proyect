@@ -204,13 +204,14 @@ public class ICPC
         touple[0] = intersectionP.get(a);
         touple[1] = intersectionP.get(b);
         routesO.get(touple).makeInvisible();
+        routesO.remove(touple);
         //String[] toupleR = reverseTouple(touple);
-        if(isIn(routesC, touple, toupleR)){
-            removeSign(a, b);
-            routesC.remove(touple);
-            String[] key = findKeyR(touple, routesO);
-            routesO.get(key).makeInvisible();
-            routesO.remove(key);
+        // if(isIn(routesC, touple, toupleR)){
+        //     removeSign(a, b);
+        //     routesC.remove(touple);
+        //     String[] key = findKeyR(touple, routesO);
+        //     routesO.get(key).makeInvisible();
+        //     routesO.remove(key);
             ok = true;
         }else{
             JOptionPane.showMessageDialog(null, "This road not exists");
