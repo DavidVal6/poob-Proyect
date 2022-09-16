@@ -13,7 +13,7 @@ public class Route
     private Rectangle road = new Rectangle();
     private HashMap<String, int[]> parts = new HashMap();
     private HashMap<String, Intersection>  circ = new HashMap();  
-    private boolean visible = false;
+    private boolean visible = true;
     
     public Route(String a, String b, Intersection a1, Intersection b1){
         int[] touple2 = new int[2];
@@ -24,6 +24,8 @@ public class Route
         touple3[1] = b1.getY();
         parts.put(a, touple2);
         parts.put(b, touple3);
+        resize(a, b);
+        rotate(a, b);
     }
     public void connect(String a, String b){
         road.changeColor("black");
@@ -37,6 +39,9 @@ public class Route
         circ.get(b).makeVisible();
     }
     private void resize(String a, String b){
+        road.changeColor("black");
+        road.moveHorizontal(parts.get(a)[0]);
+        road.moveVertical(parts.get(a)[1]);
         int x = (parts.get(a)[0] - parts.get(b)[0]);
         int xsqr = x*x;
         int y = (parts.get(a)[1] - parts.get(b)[1]);
@@ -44,6 +49,33 @@ public class Route
         double hipotenuse = Math.sqrt(xsqr + ysqr);
         int size = (int)Math.round(hipotenuse);
         road.changeSize(10, size);
+    }
+     /**
+     * rotate the rectangle for connect with the intersectionB
+     */
+    private void rotate(String a, String b){
+        int x = (parts.get(a)[0] - parts.get(b)[0]);
+        int xsqr = x*x;
+        int y = (parts.get(a)[1] - parts.get(b)[1]);
+        int ysqr = y*y;
+        double hipotenuse = Math.sqrt(xsqr + ysqr);
+        if(!(parts.get(a)[1] == parts.get(b)[1])){                  //If the intersections are in the same y axis, then not rotate
+                double theta = Math.asin(x/hipotenuse);
+                road.rotate(0.84596);
+            }
+        else if(parts.get(a)[0] == parts.get(b)[0]){//If the intersections are in the same x axis, then rotate 90 degrees
+                int size = (int) Math.round(hipotenuse);
+                System.out.println("Hi");
+                road.changeSize(size, 10);
+                road.moveHorizontal(-5);
+                if(parts.get(b)[1] > parts.get(a)[1]){
+                road.moveVertical(parts.get(a)[1]-parts.get(b)[1]);
+                }
+        }else{
+            if(parts.get(b)[0] > parts.get(a)[0]){
+                road.moveHorizontal(parts.get(a)[0] - parts.get(b)[0]);
+            }
+        }
     }
     public void draw(){
         road.makeVisible();

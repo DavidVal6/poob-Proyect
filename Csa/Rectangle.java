@@ -29,7 +29,7 @@ public class Rectangle{
         xPosition = 25;
         yPosition = 20;
         color = "magenta";
-        isVisible = false;
+        isVisible = true;
     }
     
     public int getXposition(){
@@ -47,7 +47,6 @@ public class Rectangle{
         isVisible = true;
         draw();
     }
-    
     /**
      * Make this rectangle invisible. If it was already invisible, do nothing.
      */
@@ -165,11 +164,26 @@ public class Rectangle{
         color = newColor;
         draw();
     }
-
+    /*+
+     * This method get an input that is in radians and rotate the rectangle in x radians 
+     */
+    public void rotate(double angle){
+        draw(angle);
+    }
     /*
      * Draw the rectangle with current specifications on screen.
      */
-
+    private void draw(double angle) {
+        AffineTransform rotation = new AffineTransform();
+        rotation.rotate(angle,this.getXposition(),this.getYposition());
+        Shape shapeFinal = new java.awt.Rectangle(xPosition, yPosition, width, height);
+        Shape newShape = rotation.createTransformedShape(shapeFinal);
+        if(isVisible) {
+            Canvas canvas = Canvas.getCanvas();
+            canvas.draw(this, color,newShape);
+            canvas.wait(10);
+        }
+    }
     private void draw() {
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();
@@ -178,12 +192,6 @@ public class Rectangle{
                                        width, height));
             canvas.wait(10);
         }
-    }
-    /*+
-     * This method get an input that is in radians and rotate the rectangle in x radians 
-     */
-    public void rotate(double theta){
-        
     }
 
     /*
