@@ -18,10 +18,10 @@ public class ICPC
     public static int width;
     public static boolean isVisible = true;
     private ArrayList<String> intersectionC = new ArrayList();
-    private HashMap<String, int[]> intersectionP = new HashMap();
+    private HashMap<String, Intersection> intersectionP = new HashMap();
     private HashMap<String, Circle> intersectionO = new HashMap();
     private ArrayList<String[]> routesC = new ArrayList();
-    private HashMap<String[], Rectangle> routesO = new HashMap();
+    private HashMap<Intersection[], Route> routesO = new HashMap();
     private ArrayList<String[]> signsC = new ArrayList();
     private HashMap<String[], Sign> signsO = new HashMap();
     private boolean ok;
@@ -46,14 +46,10 @@ public class ICPC
      * @x y the desired position of the intersecion in the canvas
      */
     public void addIntersection(String color, int x, int y){
-        if(!intersectionC.contains(color)){
-            intersectionC.add(color);
-            int[] position = new int[2];
-            position[0] = x;
-            position[1] = y;
-            intersectionP.put(color, position);
-            createIntersection(color, x, y);
-            intersectionC.sort(Comparator.naturalOrder());
+        if(!intersectionP.containsKey(color)){
+            Intersection intr1 = new Intersection(color, x, y);
+            intersectionP.put(color, intr1);
+            createIntersection(color);
             ok = true;
         }else{
             JOptionPane.showMessageDialog(null, "This intersection already exists");
@@ -64,85 +60,85 @@ public class ICPC
     /**
      * Create the intersection in the canvas
      */
-    private void createIntersection(String color, int x, int y){
-        Circle circle = new Circle();
-        circle.moveHorizontal(x);
-        circle.moveVertical(y);
-        circle.changeColor(color);
-        intersectionO.put(color, circle);
-        circle.makeVisible();
+    private void createIntersection(String key){
+        intersectionP.get(key).makeVisible();
     }
+
     
     /**
      * Add the new road to the canvas
      * @param intersectionA and intersectionB indicates the begin and the end of the route 
      */
-    public void addRoute(String intersectionA, String intersectionB){
-        String[] touple = new String[2];
-        touple[0] = intersectionA;
-        touple[1] = intersectionB;
-        String[] toupleR = reverseTouple(touple);
-        if(isIn(routesC, touple, toupleR) == false){
-            routesC.add(touple);
-            createRoute(intersectionA, intersectionB, touple);
-            ok = true;
-        }else{
-            JOptionPane.showMessageDialog(null, "This road already exists");
-            ok = false;
+    public void addRoute(String a, String b){
+        Intersection touple[] = new Intersection[2];
+        touple[0] = intersectionP.get(a);
+        touple[1] = intersectionP.get(b);
+        if(!routesO.containsKey(touple)){
+            Route r1 = new Route(a, b, touple[0], touple[1]);
+            routesO.put(touple, r1);
         }
     }
+        // if(isIn(routesC, touple, toupleR) == false){
+        //     routesC.add(touple);
+        //     createRoute(intersectionA, intersectionB, touple);
+        //     ok = true;
+    //     }else{
+    //         JOptionPane.showMessageDialog(null, "This road already exists");
+    //         ok = false;
+    //     } 
+    // }
     
-    /**
-     * Create the route in the canvas
-     */
-    private void createRoute(String intersectionA, String intersectionB, String[] touple){
-        Rectangle rect = new Rectangle();
-        rect.changeColor("black");
-        rect.moveHorizontal(intersectionP.get(intersectionA)[0]);
-        rect.moveVertical(intersectionP.get(intersectionA)[1]);
-        routesO.put(touple, rect);
-        resize(rect, intersectionA, intersectionB);
-        rotate(rect, intersectionA, intersectionB);
-        intersectionO.get(intersectionA).makeInvisible();
-        intersectionO.get(intersectionB).makeInvisible();
-        rect.makeVisible();
-        intersectionO.get(intersectionA).makeVisible();
-        intersectionO.get(intersectionB).makeVisible();
-    }
+    // /**
+    //  * Create the route in the canvas
+    //  */
+    // private void createRoute(String intersectionA, String intersectionB, String[] touple){
+    //     Rectangle rect = new Rectangle();
+    //     rect.changeColor("black");
+    //     rect.moveHorizontal(intersectionP.get(intersectionA)[0]);
+    //     rect.moveVertical(intersectionP.get(intersectionA)[1]);
+    //     routesO.put(touple, rect);
+    //     resize(rect, intersectionA, intersectionB);
+    //     rotate(rect, intersectionA, intersectionB);
+    //     intersectionO.get(intersectionA).makeInvisible();
+    //     intersectionO.get(intersectionB).makeInvisible();
+    //     rect.makeVisible();
+    //     intersectionO.get(intersectionA).makeVisible();
+    //     intersectionO.get(intersectionB).makeVisible();
+    // }
     
-    /**
-     * Resize the rectangle to the correct dimensions to the road
-     */
-    private void resize(Rectangle rect, String intersectionA, String intersectionB){
-        int x = (intersectionP.get(intersectionA)[0] - intersectionP.get(intersectionB)[0]);
-        int xsqr = x*x;
-        int y = (intersectionP.get(intersectionA)[1] - intersectionP.get(intersectionB)[1]);
-        int ysqr = y*y; 
-        double hipotenuse = Math.sqrt(xsqr + ysqr);
-        int size = (int) Math.round(hipotenuse);
-        rect.changeSize(10, size);
-    }
+    // /**
+    //  * Resize the rectangle to the correct dimensions to the road
+    //  */
+    // private void resize(Rectangle rect, String intersectionA, String intersectionB){
+    //     int x = (intersectionP.get(intersectionA)[0] - intersectionP.get(intersectionB)[0]);
+    //     int xsqr = x*x;
+    //     int y = (intersectionP.get(intersectionA)[1] - intersectionP.get(intersectionB)[1]);
+    //     int ysqr = y*y; 
+    //     double hipotenuse = Math.sqrt(xsqr + ysqr);
+    //     int size = (int) Math.round(hipotenuse);
+    //     rect.changeSize(10, size);
+    // }
     
-    /**
-     * rotate the rectangle for connect with the intersectionB
-     */
-    private void rotate(Rectangle rect, String intersectionA, String intersectionB){
-        int x = (intersectionP.get(intersectionA)[0] - intersectionP.get(intersectionB)[0]);
-        int xsqr = x*x;
-        int y = (intersectionP.get(intersectionA)[1] - intersectionP.get(intersectionB)[1]);
-        int ysqr = y*y; 
-        double hipotenuse = Math.sqrt(xsqr + ysqr);
-        if(!(intersectionP.get(intersectionA)[1] == intersectionP.get(intersectionB)[1])){                  //If the intersections are in the same y axis, then not rotate
-                double theta = Math.asin(x/hipotenuse);
-                rect.rotate(theta);
-            }
-        if(intersectionP.get(intersectionA)[0] == intersectionP.get(intersectionB)[0]){        //If the intersections are in the same x axis, then rotate 90 degrees
-                int size = (int) Math.round(hipotenuse);
-                System.out.println("Hi");
-                rect.changeSize(size, 10);
-                rect.moveHorizontal(-5);
-        }
-    }
+    // /**
+    //  * rotate the rectangle for connect with the intersectionB
+    //  */
+    // private void rotate(Rectangle rect, String intersectionA, String intersectionB){
+    //     int x = (intersectionP.get(intersectionA)[0] - intersectionP.get(intersectionB)[0]);
+    //     int xsqr = x*x;
+    //     int y = (intersectionP.get(intersectionA)[1] - intersectionP.get(intersectionB)[1]);
+    //     int ysqr = y*y; 
+    //     double hipotenuse = Math.sqrt(xsqr + ysqr);
+    //     if(!(intersectionP.get(intersectionA)[1] == intersectionP.get(intersectionB)[1])){                  //If the intersections are in the same y axis, then not rotate
+    //             double theta = Math.asin(x/hipotenuse);
+    //             rect.rotate(theta);
+    //         }
+    //     if(intersectionP.get(intersectionA)[0] == intersectionP.get(intersectionB)[0]){        //If the intersections are in the same x axis, then rotate 90 degrees
+    //             int size = (int) Math.round(hipotenuse);
+    //             System.out.println("Hi");
+    //             rect.changeSize(size, 10);
+    //             rect.moveHorizontal(-5);
+    //     }
+    // }
     
     /**
      * Put a sign in the canvas of the simulation
@@ -178,8 +174,8 @@ public class ICPC
      * Move the signal over the intersection A
      */
     private void moveSign(Sign sign, String intersectionA){
-        int x = intersectionP.get(intersectionA)[0];
-        int y = intersectionP.get(intersectionA)[1];
+        int x = intersectionP.get(intersectionA).getX();
+        int y = intersectionP.get(intersectionA).getY();
         int moveX = x + 30;
         int moveY = y - 10;
         sign.move(moveX, moveY);
@@ -190,11 +186,8 @@ public class ICPC
      * @param color indicates the intersection that wants delete
      */
     public void delIntersection(String color){
-        if(intersectionC.contains(color)){
-            intersectionC.remove(color);
+        if(intersectionP.containsKey(color)){
             intersectionO.get(color).makeInvisible();
-            intersectionP.remove(color);
-            intersectionO.remove(color);
             ok = true;
         }else{
             JOptionPane.showMessageDialog(null, "This intersection not exists");
@@ -206,13 +199,14 @@ public class ICPC
      * Delete a road from the simulation
      * @param intersectionA and intersectionB indicates the road that wants delete
      */
-    public void delRoad(String locationA, String locationB){
-        String[] touple = new String[2];
-        touple[0] = locationA;
-        touple[1] = locationB;
-        String[] toupleR = reverseTouple(touple);
+    public void delRoad(String a, String b){
+        Intersection touple[] = new Intersection[2];
+        touple[0] = intersectionP.get(a);
+        touple[1] = intersectionP.get(b);
+        routesO.get(touple).makeInvisible();
+        //String[] toupleR = reverseTouple(touple);
         if(isIn(routesC, touple, toupleR)){
-            removeSign(locationA, locationB);
+            removeSign(a, b);
             routesC.remove(touple);
             String[] key = findKeyR(touple, routesO);
             routesO.get(key).makeInvisible();

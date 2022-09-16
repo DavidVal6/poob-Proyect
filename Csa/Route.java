@@ -12,7 +12,6 @@ public class Route
 {
     private Rectangle road = new Rectangle();
     private HashMap<String, int[]> parts = new HashMap();
-    private HashMap<String, Intersection>  circ = new HashMap();  
     private boolean visible = true;
     
     public Route(String a, String b, Intersection a1, Intersection b1){
@@ -27,16 +26,16 @@ public class Route
         resize(a, b);
         rotate(a, b);
     }
-    public void connect(String a, String b){
+    public void connect(String a, String b, Intersection a1, Intersection b1){
         road.changeColor("black");
         road.moveHorizontal(parts.get(a)[0]);
         road.moveVertical(parts.get(a)[1]);
         resize(a, b);
-        circ.get(a).makeInvisible();
-        circ.get(b).makeInvisible();
+        a1.makeInvisible();
+        b1.makeInvisible();
         road.makeVisible();
-        circ.get(a).makeVisible();
-        circ.get(b).makeVisible();
+        a1.makeVisible();
+        b1.makeVisible();
     }
     private void resize(String a, String b){
         road.changeColor("black");
@@ -60,21 +59,15 @@ public class Route
         int ysqr = y*y;
         double hipotenuse = Math.sqrt(xsqr + ysqr);
         if(!(parts.get(a)[1] == parts.get(b)[1])){                  //If the intersections are in the same y axis, then not rotate
+                
                 double theta = Math.asin(x/hipotenuse);
-                road.rotate(0.84596);
+                road.rotate(theta);
             }
-        else if(parts.get(a)[0] == parts.get(b)[0]){//If the intersections are in the same x axis, then rotate 90 degrees
+        if(parts.get(a)[0] == parts.get(b)[0]){//If the intersections are in the same x axis, then rotate 90 degrees
                 int size = (int) Math.round(hipotenuse);
                 System.out.println("Hi");
                 road.changeSize(size, 10);
                 road.moveHorizontal(-5);
-                if(parts.get(b)[1] > parts.get(a)[1]){
-                road.moveVertical(parts.get(a)[1]-parts.get(b)[1]);
-                }
-        }else{
-            if(parts.get(b)[0] > parts.get(a)[0]){
-                road.moveHorizontal(parts.get(a)[0] - parts.get(b)[0]);
-            }
         }
     }
     public void draw(){
@@ -85,8 +78,10 @@ public class Route
     public Rectangle getRoad() {
         return road;
     }
-
-    public ArrayList<String> getParts() {
+    public void makeInvisible(){
+        road.makeInvisible();
+    }
+    public ArrayList<String> getParts(){
         ArrayList<String> keys = new ArrayList<>();
         Set<String> key = parts.keySet();
         for(String a : key){
@@ -94,10 +89,6 @@ public class Route
         }
         return keys;
     }
-    public HashMap<String, Intersection> getCirc() {
-        return circ;
-    }
-
     public boolean isVisible() {
         return visible;
     }
