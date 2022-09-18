@@ -16,6 +16,7 @@ public class ICPC
 {    
     public static int length;
     public static int width;
+    public static int cost;
     public static boolean isVisible = true;
     private ArrayList<String> intersectionC = new ArrayList();
     private HashMap<String, Intersection> intersectionP = new HashMap();
@@ -39,6 +40,16 @@ public class ICPC
             canvas.wait(10);
         }
     }
+
+    public ICPC(int length, int width, int cost){
+        this.width = width;
+        this.length = length;
+        this.cost = cost;
+        if(isVisible){
+            Canvas canvas = Canvas.getCanvas(length, width);
+            canvas.wait(10);
+    }
+}
     
     /**
      * Add the new intersection to the canvas
@@ -295,6 +306,10 @@ public class ICPC
             }
             isVisible = true;
         }
+    }
+    public int getSpeedLimit(String speed){
+        return signsO.get(speed).speedLimit();
+
     }
     
     /**

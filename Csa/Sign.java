@@ -61,4 +61,7 @@ public class Sign
         Canvas canvas = Canvas.getCanvas();
         canvas.erase(this);
     }
+    public int speedLimit(){
+        return Integer.parseInt(speed);
+    }
 }
