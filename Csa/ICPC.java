@@ -203,7 +203,12 @@ public class ICPC
         Intersection touple[] = new Intersection[2];
         touple[0] = intersectionP.get(a);
         touple[1] = intersectionP.get(b);
-        routesO.get(touple).makeInvisible();
+        // routesO.get(touple).makeInvisible();
+        if(routesO.containsKey(touple)){
+            System.out.println("Si esta");
+        }else{
+            System.out.println("No esta");
+        }
         routesO.remove(touple);
         //String[] toupleR = reverseTouple(touple);
         // if(isIn(routesC, touple, toupleR)){
@@ -213,10 +218,10 @@ public class ICPC
         //     routesO.get(key).makeInvisible();
         //     routesO.remove(key);
             ok = true;
-        }else{
-            JOptionPane.showMessageDialog(null, "This road not exists");
-            ok = false;
-        }
+        // }else{
+            // JOptionPane.showMessageDialog(null, "This road not exists");
+            // ok = false;
+        // }
     }
     
     /**
@@ -274,9 +279,6 @@ public class ICPC
      */
     public void makeVisible(){
         if(!isVisible){
-            for(String[] key: routesO.keySet()){
-                routesO.get(key).makeVisible();
-            }
             for(String key: intersectionO.keySet()){
                 intersectionO.get(key).makeVisible();
             }
@@ -295,7 +297,7 @@ public class ICPC
             for(String key: intersectionO.keySet()){
                 intersectionO.get(key).makeInvisible();
             }
-            for(String[] key: routesO.keySet()){
+            for(Intersection[] key: routesO.keySet()){
                 routesO.get(key).makeInvisible();
             }
             for(String[] key: signsO.keySet()){

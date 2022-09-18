@@ -81,6 +81,9 @@ public class Route
     public void makeInvisible(){
         road.makeInvisible();
     }
+    public void makeVisible(){
+        draw();
+    }
     public ArrayList<String> getParts(){
         ArrayList<String> keys = new ArrayList<>();
         Set<String> key = parts.keySet();
