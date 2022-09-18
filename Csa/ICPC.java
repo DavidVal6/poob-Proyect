@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.Comparator;
 import javax.swing.JOptionPane;
 import java.lang.Math;
@@ -22,6 +23,8 @@ public class ICPC
     private HashMap<String, Intersection> intersectionP = new HashMap();
     private HashMap<String, Circle> intersectionO = new HashMap();
     private ArrayList<String[]> routesC = new ArrayList();
+    private ArrayList<String[]> wrongSign = new ArrayList();
+    private ArrayList<String[]> unNecessarySign = new ArrayList();
     private HashMap<Intersection[], Route> routesO = new HashMap();
     private ArrayList<String[]> signsC = new ArrayList();
     private HashMap<String[], Sign> signsO = new HashMap();
@@ -49,7 +52,20 @@ public class ICPC
             Canvas canvas = Canvas.getCanvas(length, width);
             canvas.wait(10);
     }
-}
+    }
+    public ICPC(int cost, int[][] roadsSpeedLimits){
+        this.cost = cost;
+        for(int i = 0; i < roadsSpeedLimits.length;i++){
+            String intersectionA = intersectionC.get(roadsSpeedLimits[i][0] - 1);
+            String intersectionB = intersectionC.get(roadsSpeedLimits[i][1] - 1);
+            int speedLimit = roadsSpeedLimits[i][2];
+            roadSpeedLimit(intersectionA,intersectionB,speedLimit);
+        }
+    }
+    public void roadSpeedLimit(String intersectionA, String intersectionB, int speedLimit){
+        addRoute(intersectionA, intersectionB);
+        putSign(intersectionA, intersectionB, speedLimit);
+    }
     
     /**
      * Add the new intersection to the canvas
@@ -85,13 +101,22 @@ public class ICPC
         Intersection touple[] = new Intersection[2];
         touple[0] = intersectionP.get(a);
         touple[1] = intersectionP.get(b);
-        if(!routesO.containsKey(touple)){
+        Intersection toupleR[] = new Intersection[2];
+        toupleR[0] = intersectionP.get(b);
+        toupleR[1] = intersectionP.get(a);
+        Intersection[] checker = isInRoute(routesO.keySet(),touple);
+        Intersection[] checkerR = isInRoute(routesO.keySet(),toupleR);
+        if(checker == null && checkerR == null){
             Route r1 = new Route(a, b, touple[0], touple[1]);
             routesO.put(touple, r1);
             String toupleS[] = new String[2];
             toupleS[0] = a;
             toupleS[1] = b;
             routesC.add(toupleS);
+            ok = true;
+        }else{
+            JOptionPane.showMessageDialog(null, "This road already exists");
+            ok = false;
         }
     }
         // if(isIn(routesC, touple, toupleR) == false){
@@ -172,6 +197,16 @@ public class ICPC
             ok = true;
         }else{
             JOptionPane.showMessageDialog(null, "This sign already exists or the route not exists");
+            String speed = Integer.toString(speedLimit);
+            String inside[] = new String[3];
+            inside[0] = intersectionA;
+            inside[1] = intersectionB;
+            inside[2] = speed;
+            if(isIn(signs(), touple, toupleR) == true){
+                unNecessarySign.add(inside);
+            }else{
+                wrongSign.add(inside);
+            }
             ok = false;
         }
     }
@@ -183,18 +218,40 @@ public class ICPC
         String speed = String.valueOf(speedLimit);
         Sign sign = new Sign(speed);
         signsO.put(touple, sign);
-        moveSign(sign, intersectionA);
+        moveSign(sign, intersectionA,intersectionB);
     }
     
     /**
      * Move the signal over the intersection A
      */
-    private void moveSign(Sign sign, String intersectionA){
+    private void moveSign(Sign sign, String intersectionA, String intersectionB){
+        int touple[] = direction(intersectionA, intersectionB);
+        int x = touple[0];
+        int y = touple[1];
+        sign.move(x, y);
+    }
+    private int[] direction(String intersectionA, String intersectionB){
         int x = intersectionP.get(intersectionA).getX();
+        int x1 = intersectionP.get(intersectionB).getX();
+        int y1 = intersectionP.get(intersectionB).getY();
         int y = intersectionP.get(intersectionA).getY();
-        int moveX = x + 30;
-        int moveY = y - 10;
-        sign.move(moveX, moveY);
+        int moveX ;
+        int moveY ;
+        if(x< x1){
+            moveX = x + 30;
+            moveY = y - 10;
+        }else if(x > x1){
+            moveX = x - 30;
+            moveY = y - 10;
+        }else if(y < y1){
+            moveX = x + 10;
+            moveY = y + 30;
+        }else{
+            moveX = x - 10;
+            moveY = y - 30;
+        }
+        int[] touple = {moveX, moveY};
+        return touple;
     }
     
     /**
@@ -219,21 +276,32 @@ public class ICPC
         Intersection touple[] = new Intersection[2];
         touple[0] = intersectionP.get(a);
         touple[1] = intersectionP.get(b);
+        Intersection toupleR[] = new Intersection[2];
+        toupleR[1] = intersectionP.get(a);
+        toupleR[0] = intersectionP.get(b);
+        touple = isInRoute(routesO.keySet(),touple);
+        toupleR = isInRoute(routesO.keySet(),toupleR);
         // routesO.get(touple).makeInvisible();
-        if(routesO.containsKey(touple)){
-            System.out.println("Si esta");
+        if(touple != null){
+            routesO.get(touple).makeInvisible();
+            routesO.remove(touple);
+            ok = true;
+        }else if(toupleR != null){
+            routesO.get(toupleR).makeInvisible();
+            routesO.remove(toupleR);
+            ok = true;
         }else{
-            System.out.println("No esta");
+            JOptionPane.showMessageDialog(null, "This road not exists");
+            ok = false;
         }
-        routesO.remove(touple);
-        //String[] toupleR = reverseTouple(touple);
+        // //String[] toupleR = reverseTouple(touple);
         // if(isIn(routesC, touple, toupleR)){
         //     removeSign(a, b);
         //     routesC.remove(touple);
         //     String[] key = findKeyR(touple, routesO);
         //     routesO.get(key).makeInvisible();
         //     routesO.remove(key);
-            ok = true;
+            
         // }else{
             // JOptionPane.showMessageDialog(null, "This road not exists");
             // ok = false;
@@ -292,6 +360,14 @@ public class ICPC
     public ArrayList<String[]> signs(){
         return signsC;
     }
+
+    public ArrayList<String[]> wronSigns(){
+        return wrongSign;
+    }
+    public ArrayList<String[]> unNecessarySigns(){
+        return unNecessarySign;
+    }
+
     
     /**
      * Makes visible the canvas with the simulation
@@ -345,12 +421,16 @@ public class ICPC
     /**
      * Return if an intersection is hava an associated road
      */
-    private boolean isInRoute(String color){
+    private Intersection[] isInRoute(Set<Intersection[]> keys, Intersection[] touple){
         boolean flag = false;
-        for(int i = 0; i < routesC.size() && flag == false; i++){
-            flag = Arrays.asList(routesC.get(i)).contains(color);
+        Intersection intersectionA = touple[0];
+        Intersection intersectionB = touple[1];
+        for(Intersection[] a : keys){
+            if(a[0].equals(intersectionA) && a[1].equals(intersectionB)){
+                return a;
+            }
         }
-        return flag;
+        return null;
     }
     /**
      * Return the reverse of a touple
@@ -374,11 +454,18 @@ public class ICPC
         }
         return null;
     }
-    public int getTotalCost(){
+    public int getTotalSignCost(){
         int counter = 0;
         counter += cost * signsC.size();
         return counter;
     }
+    public void finish(){
+        int total = getTotalSignCost();
+        JOptionPane.showMessageDialog(null, "Wow you finish the total cost of your net is: " + total );
+        System.exit(0);
+    }
+
+ 
     /**
      * Find the key of the HashMap that is equals to a parameter
      * @param a touple to compare
