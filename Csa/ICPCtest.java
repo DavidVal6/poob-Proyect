@@ -74,4 +74,17 @@ public class ICPCtest
         //ArrayList<String[]> signs = ic1.signs();
         //assertEquals(0,signs.size());
     }
+    @Test
+    public void shouldGaveMeThetotalCost(){
+        ICPC ic1 = new ICPC(1000,1000,40);
+        ic1.addIntersection("blue",20,30);
+        ic1.addIntersection("red",20,780);
+        ic1.addRoute("blue","red");
+        ic1.addIntersection("yellow",140,30);
+        ic1.addRoute("blue","yellow");
+        ic1.putSign("blue", "red",30);
+        ic1.putSign("blue", "yellow",20);
+        assertEquals(80,ic1.getTotalCost());
+
+    }
 }

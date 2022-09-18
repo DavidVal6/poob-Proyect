@@ -374,7 +374,11 @@ public class ICPC
         }
         return null;
     }
-    
+    public int getTotalCost(){
+        int counter = 0;
+        counter += cost * signsC.size();
+        return counter;
+    }
     /**
      * Find the key of the HashMap that is equals to a parameter
      * @param a touple to compare

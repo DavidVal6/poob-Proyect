@@ -15,4 +15,6 @@ comment4.target=void\ makeInvisible()
 comment5.params=
 comment5.target=void\ erase()
 comment5.text=\r\n\ To\ delete\ de\ canvas\r\n
-numComments=6
+comment6.params=
+comment6.target=int\ speedLimit()
+numComments=7
