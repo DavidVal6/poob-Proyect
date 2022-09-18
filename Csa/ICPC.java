@@ -51,6 +51,7 @@ public class ICPC
             intersectionP.put(color, intr1);
             createIntersection(color);
             ok = true;
+            intersectionC.add(color);
         }else{
             JOptionPane.showMessageDialog(null, "This intersection already exists");
             ok = false;
@@ -76,6 +77,10 @@ public class ICPC
         if(!routesO.containsKey(touple)){
             Route r1 = new Route(a, b, touple[0], touple[1]);
             routesO.put(touple, r1);
+            String toupleS[] = new String[2];
+            toupleS[0] = a;
+            toupleS[1] = b;
+            routesC.add(toupleS);
         }
     }
         // if(isIn(routesC, touple, toupleR) == false){
@@ -272,6 +277,9 @@ public class ICPC
             roads[i] = routesC.get(i);
         }
         return roads;
+    }
+    public ArrayList<String[]> signs(){
+        return signsC;
     }
     
     /**

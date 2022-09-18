@@ -60,8 +60,5 @@ public class Sign
     private void erase(){
         Canvas canvas = Canvas.getCanvas();
         canvas.erase(this);
-        
     }
-    
-    
 }

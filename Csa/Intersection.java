@@ -80,4 +80,10 @@ public class Intersection
     {
         return color;
     }
+    @Override
+    public String toString() {
+        return "Intersection [color=" + color + ", size=" + size + ", visible=" + visible + ", xPosition=" + xPosition
+                + ", yPosition=" + yPosition + "]";
+    }
+    
 }
