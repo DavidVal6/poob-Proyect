@@ -28,14 +28,14 @@ public class ICPCtest
         ICPC ic1 = new ICPC(1000,1000);
         ic1.addIntersection("blue",20,30);
         ic1.addIntersection("red",20,780);
-        ic1.addRoute("blue","red");
+        ic1.addRoute("blue","red",12);
     }
     @Test
     public void shouldEliminateRoute(){
         ICPC ic1 = new ICPC(1000,1000);
         ic1.addIntersection("blue",20,30);
         ic1.addIntersection("red",20,780);
-        ic1.addRoute("blue","red");
+        ic1.addRoute("blue","red",12);
         ic1.delRoad("blue","red");
     }
     @Test
@@ -51,7 +51,7 @@ public class ICPCtest
         ICPC ic1 = new ICPC(1000,1000);
         ic1.addIntersection("blue",20,30);
         ic1.addIntersection("red",20,780);
-        ic1.addRoute("blue","red");
+        ic1.addRoute("blue","red",12);
         String[][] ans = ic1.roads();
         assertEquals(1,ans.length);
     }
@@ -60,7 +60,7 @@ public class ICPCtest
         ICPC ic1 = new ICPC(1000,1000);
         ic1.addIntersection("blue",20,30);
         ic1.addIntersection("red",20,780);
-        ic1.addRoute("blue","red");
+        ic1.addRoute("blue","red",12);
         ic1.putSign("blue", "red",30);
     }
     @Test
@@ -68,7 +68,7 @@ public class ICPCtest
         ICPC ic1 = new ICPC(1000,1000);
         ic1.addIntersection("blue",20,30);
         ic1.addIntersection("red",20,780);
-        ic1.addRoute("blue","red");
+        ic1.addRoute("blue","red",12);
         ic1.putSign("blue", "red",30);
         ic1.removeSign("blue", "red");
         //ArrayList<String[]> signs = ic1.signs();
@@ -79,11 +79,11 @@ public class ICPCtest
         ICPC ic1 = new ICPC(1000,1000,40);
         ic1.addIntersection("blue",20,30);
         ic1.addIntersection("red",20,780);
-        ic1.addRoute("blue","red");
+        ic1.addRoute("blue","red",30);
         ic1.addIntersection("yellow",140,30);
-        ic1.addRoute("blue","yellow");
+        ic1.addRoute("blue","yellow",12);
         ic1.putSign("blue", "red",30);
-        ic1.putSign("blue", "yellow",20);
+        ic1.putSign("blue", "yellow",12);
         assertEquals(80,ic1.getTotalSignCost());
     }
     @Test
@@ -91,9 +91,9 @@ public class ICPCtest
         ICPC ic1 = new ICPC(1000,1000,40);
         ic1.addIntersection("blue",20,30);
         ic1.addIntersection("red",20,780);
-        ic1.addRoute("blue","red");
+        ic1.addRoute("blue","red",30);
         ic1.addIntersection("yellow",140,30);
-        ic1.addRoute("blue","yellow");
+        ic1.addRoute("blue","yellow",20);
         ic1.putSign("blue", "red",30);
         ic1.putSign("blue", "yellow",20);
         ic1.finish();
@@ -101,6 +101,17 @@ public class ICPCtest
     @Test
     public void ShouldProveICPC(){
         ICPC ic1 = new ICPC(1000,1000);
+    }
+    @Test
+    public void shouldMakeICPC(){
+        //ICPC newIc = new ICPC(2,{{1,2,10},{2,3,7},{3,5,5},{2,4,9}});
         
+    }
+    @Test
+    public void shouldWorkxd(){
+        ICPC ic1 = new ICPC(1000,1000,40);
+        ic1.addIntersection("blue",20,30);
+        ic1.addIntersection("red",67,30);
+        ic1.addRoute("red","blue",20);
     }
 }

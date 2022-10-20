@@ -29,6 +29,7 @@ public class ICPC
     private ArrayList<String[]> signsC = new ArrayList();
     private HashMap<String[], Sign> signsO = new HashMap();
     private boolean ok;
+    private HashMap<Integer, int[]> posiciones = new HashMap();
     
     /**
      * Create a simulation of a ICPC network
@@ -51,19 +52,32 @@ public class ICPC
         if(isVisible){
             Canvas canvas = Canvas.getCanvas(length, width);
             canvas.wait(10);
-    }
-    }
-    public ICPC(int cost, int[][] roadsSpeedLimits){
-        this.cost = cost;
-        for(int i = 0; i < roadsSpeedLimits.length;i++){
-            String intersectionA = intersectionC.get(roadsSpeedLimits[i][0] - 1);
-            String intersectionB = intersectionC.get(roadsSpeedLimits[i][1] - 1);
-            int speedLimit = roadsSpeedLimits[i][2];
-            roadSpeedLimit(intersectionA,intersectionB,speedLimit);
         }
     }
+    /**
+     * This method works as the input from the contest
+     * @param cost
+     * @param roadsSpeedLimits
+     */
+    public ICPC(int cost, int[][] roadsSpeedLimits){
+        this.width = 1000;
+        this.length = 1000;
+        this.cost = cost;
+        fillPosiciones();
+        if(isVisible){
+            Canvas canvas = Canvas.getCanvas(length, width);
+            canvas.wait(10);
+        }
+        for (int i = 1; i <= roadsSpeedLimits.length+1;++i){
+            addIntersection(Integer.toString(i), this.posiciones.get(i)[0], this.posiciones.get(i)[1]);
+        }
+        for (int i = 0; i < roadsSpeedLimits.length;++i){
+            roadSpeedLimit(Integer.toString(roadsSpeedLimits[i][0]),Integer.toString(roadsSpeedLimits[i][1]),roadsSpeedLimits[i][2]);
+        }
+
+    }
     public void roadSpeedLimit(String intersectionA, String intersectionB, int speedLimit){
-        addRoute(intersectionA, intersectionB);
+        addRoute(intersectionA, intersectionB,speedLimit);
         putSign(intersectionA, intersectionB, speedLimit);
     }
     
@@ -97,7 +111,7 @@ public class ICPC
      * Add the new road to the canvas
      * @param intersectionA and intersectionB indicates the begin and the end of the route 
      */
-    public void addRoute(String a, String b){
+    public void addRoute(String a, String b,int velocity){
         Intersection touple[] = new Intersection[2];
         touple[0] = intersectionP.get(a);
         touple[1] = intersectionP.get(b);
@@ -107,7 +121,7 @@ public class ICPC
         Intersection[] checker = isInRoute(routesO.keySet(),touple);
         Intersection[] checkerR = isInRoute(routesO.keySet(),toupleR);
         if(checker == null && checkerR == null){
-            Route r1 = new Route(a, b, touple[0], touple[1]);
+            Route r1 = new Route(a, b, touple[0], touple[1],velocity);
             routesO.put(touple, r1);
             String toupleS[] = new String[2];
             toupleS[0] = a;
@@ -221,6 +235,18 @@ public class ICPC
         moveSign(sign, intersectionA,intersectionB);
     }
     
+    private void fillPosiciones(){
+        int[] pos = {500, 500};
+        this.posiciones.put(1, pos);
+        int[] pos2 = {700, 500};
+        this.posiciones.put(2, pos2);
+        int[] pos3 = {500, 300};
+        this.posiciones.put(3, pos3);
+        int[] pos4 = {300, 500};
+        this.posiciones.put(4, pos4);
+        int[] pos5 = {700, 700};
+        this.posiciones.put(5, pos5);
+    }
     /**
      * Move the signal over the intersection A
      */
@@ -385,7 +411,6 @@ public class ICPC
     }
     public int getSpeedLimit(String speed){
         return signsO.get(speed).speedLimit();
-
     }
     
     /**

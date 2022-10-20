@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=ICPCContest
+comment0.text=\r\n\ New\ class\r\n
+comment1.params=cost\ routesSpeedLimits
+comment1.target=ICPCContest(int,\ int[][])
+comment2.params=cost\ routesSpeedLimits
+comment2.target=int\ solve(int,\ int[][])
+comment3.params=cost\ routesSpeedLimits
+comment3.target=void\ simulate(int,\ int[][])
+comment3.text=\r\n\ This\ method\ should\ simulate\ a\ icpc\ net\ to\ make\ easier\ the\ solution\r\n\ @param\ cost\r\n\ @param\ game\r\n
+numComments=4

@@ -18,7 +18,7 @@ public class RouteTest
     ICPC can = new ICPC(1000,1000);
     Intersection intr1 = new Intersection("blue", 120,456);
     Intersection intr2 = new Intersection("yellow", 340, 456);
-    Route r1 = new Route("blue","yellow",intr1,intr2);
+    Route r1 = new Route("blue","yellow",intr1,intr2,10);
  }
  @Test
  public void ShouldConnect(){
@@ -27,6 +27,6 @@ public class RouteTest
     Intersection intr2 = new Intersection("yellow", 610, 456);
     intr1.makeVisible();
     intr2.makeVisible();
-    Route r1 = new Route("blue","yellow",intr1,intr2);
+    Route r1 = new Route("blue","yellow",intr1,intr2,9);
  }
 }
