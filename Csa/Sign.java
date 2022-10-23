@@ -10,9 +10,9 @@ import java.awt.Graphics2D;
 public class Sign
 {
     // instance variables - replace the example below with your own
-    private ArrayList<Circle> circulos = new ArrayList();
-    private String speed;
-    private boolean visible = false;
+    protected ArrayList<Circle> circulos = new ArrayList();
+    protected String speed;
+    protected boolean visible = false;
     /**
      * This is the constructor for the class sign where i only need the graphics with the speed
      */
@@ -57,11 +57,11 @@ public class Sign
     /**
      * To delete de canvas
      */
-    private void erase(){
+    protected void erase(){
         Canvas canvas = Canvas.getCanvas();
         canvas.erase(this);
     }
-    public int speedLimit(){
+    protected int speedLimit(){
         return Integer.parseInt(speed);
     }
 }

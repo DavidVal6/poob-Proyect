@@ -35,14 +35,14 @@ public class Intersection
         }
     }
 
-    private void draw(){
+    protected void draw(){
         graphicForm.changeColor(color);
         graphicForm.moveHorizontal(xPosition);
         graphicForm.moveVertical(yPosition);
         graphicForm.makeVisible();
         visible = true;
     }
-    private void erase(){
+    protected void erase(){
         graphicForm.makeInvisible();
         visible = false;
     }

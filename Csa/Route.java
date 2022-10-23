@@ -10,10 +10,10 @@ import java.util.Set;
  */
 public class Route
 {
-    private Line road = new Line();
-    private HashMap<String, double[]> parts = new HashMap();
-    private boolean visible = true;
-    public static int velocity;
+    protected Line road = new Line();
+    protected HashMap<String, double[]> parts = new HashMap();
+    protected boolean visible = true;
+    protected int velocity;
     
     public Route(String a, String b, Intersection a1, Intersection b1,int velocity){
         double[] touple2 = new double[2];
@@ -33,6 +33,9 @@ public class Route
         road.changePosition(parts.get(a), 0);
         road.changePosition(parts.get(b), 1);
         road.makeVisible();
+    }
+    public int getSpeed(){
+        return velocity;
     }
     
     // private void correctPos(String a, String b){

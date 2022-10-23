@@ -98,7 +98,31 @@ public class ICPC
             ok = false;
         }
     }
-    
+    /**
+     * This method is override to add diferente types of intersections
+     */
+    public void addIntersection(String type, String color, int x, int y){
+        if(!intersectionP.containsKey(color)){
+            if(type.toUpperCase().equals("NORMAL")){
+                this.addIntersection(color,x,y);
+                ok = true;
+            }else if(type.toUpperCase().equals("NEEDY")){
+                Needy ned1 = new Needy(color,x,y);
+                intersectionP.put(color, ned1);
+                intersectionC.add(color);
+                ok = true;
+            }else if(type.toUpperCase().equals("HERMIT")){
+                Hermit her1 = new Hermit(color,x,y);
+                intersectionP.put(color, her1);
+                createIntersection(color);
+                ok = true;
+                intersectionC.add(color);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "This intersection already exists");
+            ok = false;
+        }    
+    }
     /**
      * Create the intersection in the canvas
      */
@@ -113,6 +137,7 @@ public class ICPC
      */
     public void addRoute(String a, String b,int velocity){
         Intersection touple[] = new Intersection[2];
+        boolean flag = false;
         touple[0] = intersectionP.get(a);
         touple[1] = intersectionP.get(b);
         Intersection toupleR[] = new Intersection[2];
@@ -121,17 +146,130 @@ public class ICPC
         Intersection[] checker = isInRoute(routesO.keySet(),touple);
         Intersection[] checkerR = isInRoute(routesO.keySet(),toupleR);
         if(checker == null && checkerR == null){
-            Route r1 = new Route(a, b, touple[0], touple[1],velocity);
-            routesO.put(touple, r1);
-            String toupleS[] = new String[2];
-            toupleS[0] = a;
-            toupleS[1] = b;
-            routesC.add(toupleS);
-            ok = true;
+            if(intersectionP.get(a).getClass().getName().equals("Hermit")||intersectionP.get(b).getClass().getName().equals("Hermit")){
+                if(intersectionP.get(a).getClass().getName().equals("Hermit"))  flag = validateHermit(a);
+                else if(intersectionP.get(b).getClass().getName().equals("Hermit"))  flag = validateHermit(b);
+                if(!flag){
+                    Route r1 = new Route(a, b, touple[0], touple[1],velocity);
+                    routesO.put(touple, r1);
+                    String toupleS[] = new String[2];
+                    toupleS[0] = a;
+                    toupleS[1] = b;
+                    routesC.add(toupleS);
+                    if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                    if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                    ok = true;
+                }else{
+                    JOptionPane.showMessageDialog(null, "The hermit intersection already has one road");
+                    ok = false;
+                }
+            }else{
+                Route r1 = new Route(a, b, touple[0], touple[1],velocity);
+                routesO.put(touple, r1);
+                String toupleS[] = new String[2];
+                toupleS[0] = a;
+                toupleS[1] = b;
+                routesC.add(toupleS);
+                if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                ok = true;
+            }
         }else{
             JOptionPane.showMessageDialog(null, "This road already exists");
             ok = false;
         }
+    }
+    /**
+     * This method is  an override method to make diferent types of route 
+     */
+    public void addRoute(String type, String a, String b, int velocity){
+        Intersection touple[] = new Intersection[2];
+        boolean flag = false;
+        touple[0] = intersectionP.get(a);
+        touple[1] = intersectionP.get(b);
+        Intersection toupleR[] = new Intersection[2];
+        toupleR[0] = intersectionP.get(b);
+        toupleR[1] = intersectionP.get(a);
+        Intersection[] checker = isInRoute(routesO.keySet(),touple);
+        Intersection[] checkerR = isInRoute(routesO.keySet(),toupleR);
+        if(checker == null && checkerR == null){
+            if(intersectionP.get(a).getClass().getName().equals("Hermit")||intersectionP.get(b).getClass().getName().equals("Hermit")){
+                if(intersectionP.get(a).getClass().getName().equals("Hermit"))  flag = validateHermit(a);
+                else if(intersectionP.get(b).getClass().getName().equals("Hermit"))  flag = validateHermit(b);
+                if(!flag){
+                    if(type.toUpperCase().equals("REBEL")){
+                        Rebel reb1 = new Rebel(a, b, touple[0], touple[1],velocity);
+                        routesO.put(touple, reb1);
+                        String toupleS[] = new String[2];
+                        toupleS[0] = a;
+                        toupleS[1] = b;
+                        routesC.add(toupleS);
+                        if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                        if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                        ok = true;
+                    }else if(type.toUpperCase().equals("FIXED")){
+                        Fixed fix1 = new Fixed(a, b, touple[0], touple[1],velocity);
+                        routesO.put(touple, fix1);
+                        String toupleS[] = new String[2];
+                        toupleS[0] = a;
+                        toupleS[1] = b;
+                        routesC.add(toupleS);
+                        if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                        if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                        ok = true;
+                    }else if(type.toUpperCase().equals("NORMAL")){
+                        this.addRoute(a,b,velocity);
+                        if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                        if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                        ok = true;
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "The hermit intersection already has one road");
+                    ok = false;
+                }
+            }else{
+                if(type.toUpperCase().equals("REBEL")){
+                        Rebel reb1 = new Rebel(a, b, touple[0], touple[1],velocity);
+                        routesO.put(touple, reb1);
+                        String toupleS[] = new String[2];
+                        toupleS[0] = a;
+                        toupleS[1] = b;
+                        routesC.add(toupleS);
+                        if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                        if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                        ok = true;
+                    }else if(type.toUpperCase().equals("FIXED")){
+                        Fixed fix1 = new Fixed(a, b, touple[0], touple[1],velocity);
+                        routesO.put(touple, fix1);
+                        String toupleS[] = new String[2];
+                        toupleS[0] = a;
+                        toupleS[1] = b;
+                        routesC.add(toupleS);
+                        if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                        if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                        ok = true;
+                    }else if(type.toUpperCase().equals("NORMAL")){
+                        this.addRoute(a,b,velocity);
+                        if(intersectionP.get(a).getClass().getName().equals("Needy"))  makeVisibleNeedy(a);
+                        if(intersectionP.get(b).getClass().getName().equals("Needy")) makeVisibleNeedy(b);
+                        ok = true;
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "This road already exists");
+            ok = false;
+        }
+    }
+    
+    private boolean validateHermit(String a){
+        for(String[] r:routesC){
+            if(r[0].equals(a)||r[1].equals(a)) return true;
+        }
+        return false;
+    }
+    
+    private void makeVisibleNeedy(String a){
+        intersectionP.get(a).makeVisible();
     }
         // if(isIn(routesC, touple, toupleR) == false){
         //     routesC.add(touple);
@@ -224,7 +362,68 @@ public class ICPC
             ok = false;
         }
     }
-    
+    /**
+     * This is a override method that helps us to create different types of signs 
+     */
+    public void putSign(String type,String intersectionA, String intersectionB, int speedLimit){
+        if(findRoute(intersectionA,intersectionB)!=null && findRoute(intersectionA,intersectionB).getClass().getName() != "Rebel"){
+            if(type.toUpperCase().equals("NORMAL")){
+                this.putSign(intersectionA, intersectionB, speedLimit);
+            }else{
+                String[] touple = new String[2];
+                touple[0] = intersectionA;
+                touple[1] = intersectionB;
+                String[] toupleR = reverseTouple(touple);
+                if(isIn(signsC, touple, toupleR) == false && isIn(routesC, touple, toupleR) == true){
+                    signsC.add(touple);
+                    if(type.toUpperCase().equals("TWIN")){
+                        createTwin(intersectionA, intersectionB, speedLimit, touple);
+                    }else if(type.toUpperCase().equals("CAUTIOUS")){
+                        createCautious(intersectionA, intersectionB, touple);
+                    }
+                    ok = true;
+                }else{
+                    JOptionPane.showMessageDialog(null, "This sign already exists or the route not exists");
+                    String speed = Integer.toString(speedLimit);
+                    String inside[] = new String[3];
+                    inside[0] = intersectionA;
+                    inside[1] = intersectionB;
+                    inside[2] = speed;
+                    if(isIn(signs(), touple, toupleR) == true){
+                        unNecessarySign.add(inside);
+                    }else{
+                        wrongSign.add(inside);
+                    }
+                    ok = false;
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "You can put signs in a rebel route or Route not exist");
+        }
+    }    
+    private void createCautious(String intersectionA, String intersectionB, String[] touple){
+        int speedLimit = 10000000;
+        for(Route o : routesO.values()){
+            if(o.getSpeed()< speedLimit){
+                speedLimit = o.getSpeed();
+            }
+        }
+        Cautious cau = new Cautious(String.valueOf(speedLimit));
+        signsO.put(touple,cau);
+        moveSign(cau, intersectionA,intersectionB);
+    }
+    private void createTwin(String intersectionA, String intersectionB, int speedLimit, String[] touple){
+        String speed = String.valueOf(speedLimit);
+        Twin sign = new Twin(speed);
+        Twin twin1 = new Twin(speed);
+        String[] toupleR = new String[2];
+        toupleR[0] = touple[1];
+        toupleR[1] = touple[0];
+        moveSign(sign, intersectionA,intersectionB);
+        moveSign(twin1, intersectionB,intersectionA);
+        signsO.put(touple, sign);
+        signsO.put(toupleR,twin1);
+    }
     /**
      * Create the sign in the canvas
      */
@@ -309,13 +508,27 @@ public class ICPC
         toupleR = isInRoute(routesO.keySet(),toupleR);
         // routesO.get(touple).makeInvisible();
         if(touple != null){
-            routesO.get(touple).makeInvisible();
-            routesO.remove(touple);
-            ok = true;
+            if(!routesO.get(touple).getClass().getName().equals("Fixed")){
+                routesO.get(touple).makeInvisible();
+                routesO.remove(touple);
+                if(intersectionP.get(a).getClass().getName().equals("Needy"))  validateNeedy(a);
+                if(intersectionP.get(b).getClass().getName().equals("Needy")) validateNeedy(b);
+                ok = true;
+            }else{
+                JOptionPane.showMessageDialog(null, "This road Is Fixed");
+                ok = false;
+            }
         }else if(toupleR != null){
-            routesO.get(toupleR).makeInvisible();
-            routesO.remove(toupleR);
-            ok = true;
+            if(!routesO.get(toupleR).getClass().getName().equals("Fixed")){
+                routesO.get(toupleR).makeInvisible();
+                routesO.remove(toupleR);
+                if(intersectionP.get(a).getClass().getName().equals("Needy"))  validateNeedy(a);
+                if(intersectionP.get(b).getClass().getName().equals("Needy")) validateNeedy(b);
+                ok = true;
+            }else{
+                JOptionPane.showMessageDialog(null, "This road Is Fixed");
+                ok = false;
+            }
         }else{
             JOptionPane.showMessageDialog(null, "This road not exists");
             ok = false;
@@ -333,7 +546,33 @@ public class ICPC
             // ok = false;
         // }
     }
-    
+    private void validateNeedy(String a){
+        boolean flag = true;
+        for(Intersection[] touple:routesO.keySet()){
+            if(touple[0].getColor().equals(a) ||touple[1].getColor().equals(a)) flag = false;  
+        }
+        if(flag){
+            intersectionP.get(a).makeInvisible();
+        }
+    }
+    private Route findRoute(String intersectionA, String intersectionB){
+        Intersection touple[] = new Intersection[2];
+        touple[0] = intersectionP.get(intersectionA);
+        touple[1] = intersectionP.get(intersectionB);
+        Intersection toupleR[] = new Intersection[2];
+        toupleR[1] = intersectionP.get(intersectionA);
+        toupleR[0] = intersectionP.get(intersectionB);
+        touple = isInRoute(routesO.keySet(),touple);
+        toupleR = isInRoute(routesO.keySet(),toupleR);
+        // routesO.get(touple).makeInvisible();
+        if(touple != null){
+            return routesO.get(touple);
+        }else if(toupleR != null){
+            return routesO.get(toupleR);
+        }else{
+            return null;
+        }      
+    }
     /**
      * Remove a specific sign from the canvas of the simulation
      * @param intersectionA and intersectionB indicates the road that going to have the sign
@@ -347,6 +586,11 @@ public class ICPC
             signsC.remove(touple);
             String[] key = findKeyS(touple, signsO);
             signsO.get(key).makeInvisible();
+            if(signsO.get(key).getClass().getName() == "Twin"){
+               String[] keyR = findKeyS(toupleR, signsO);
+               signsO.get(keyR).makeInvisible();
+               signsO.remove(keyR);
+            }
             signsO.remove(key);
             ok = true;
         }else{

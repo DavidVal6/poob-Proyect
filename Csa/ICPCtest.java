@@ -114,4 +114,54 @@ public class ICPCtest
         ic1.addIntersection("red",67,30);
         ic1.addRoute("red","blue",20);
     }
+    @Test
+    public void shouldPutRightCautious(){
+        ICPC ic1 = new ICPC(1000,1000,40);
+        ic1.addIntersection("blue",20,30);
+        ic1.addIntersection("red",670,300);
+        ic1.addIntersection("green",330,78);
+        ic1.addRoute("red","blue",20);
+        ic1.addRoute("red","green",10);
+        ic1.putSign("cautious", "blue", "red", 70);
+        ic1.putSign("cautious", "red", "green", 8);
+    }
+    @Test
+    public void shouldPutRightTwins(){
+        ICPC ic1 = new ICPC(1000,1000,40);
+        ic1.addIntersection("blue",20,30);
+        ic1.addIntersection("red",670,300);
+        ic1.addIntersection("green",330,78);
+        ic1.addIntersection("yellow",160,780);
+        ic1.addRoute("red","blue",20);
+        ic1.addRoute("yellow","green",10);
+        ic1.putSign("twin", "blue", "red", 70);
+        ic1.putSign("twin", "yellow", "green", 8);
+    }
+    @Test
+    public void shouldNotPutRoute(){
+        ICPC ic1 = new ICPC(1000,1000,40);
+        ic1.addIntersection("blue",20,30);
+        ic1.addIntersection("hermit","red",670,300);
+        ic1.addIntersection("green",330,78);
+        ic1.addRoute("red","blue",20);
+        ic1.addRoute("red","green",10);
+    }
+    @Test
+    public void shouldNotDelRoute(){
+        ICPC ic1 = new ICPC(1000,1000,40);
+        ic1.addIntersection("blue",20,30);
+        ic1.addIntersection("green",330,78);
+        ic1.addRoute("fixed","blue","green",10);
+        ic1.delRoad("blue","green");
+    }
+    @Test
+    public void shouldMakeInvisible(){
+        ICPC ic1 = new ICPC(1000,1000,40);
+        ic1.addIntersection("Needy","blue",20,30);
+        ic1.addIntersection("Needy","red",670,300);
+        ic1.addIntersection("green",330,78);
+        ic1.addRoute("red","blue",20);
+        ic1.addRoute("blue","green",10);
+        ic1.delRoad("red","blue");
+    }
 }
