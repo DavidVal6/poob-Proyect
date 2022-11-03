@@ -355,8 +355,12 @@ public class ICPC
             inside[1] = intersectionB;
             inside[2] = speed;
             if(isIn(signs(), touple, toupleR) == true){
+                Unnecesary sign = new Unnecesary(speed);
                 unNecessarySign.add(inside);
+                moveSign(sign, intersectionA, intersectionB);
+                sign.move(10, 0);
             }else{
+                wrong sign = new wrong(speed);
                 wrongSign.add(inside);
             }
             ok = false;
