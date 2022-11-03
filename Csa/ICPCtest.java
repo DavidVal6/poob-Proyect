@@ -164,4 +164,13 @@ public class ICPCtest
         ic1.addRoute("blue","green",10);
         ic1.delRoad("red","blue");
     }
+    @Test
+    public void sholdCreateUnnecesary(){
+        ICPC ic1 = new ICPC(1000,1000);
+        ic1.addIntersection("red", 200, 200);
+        ic1.addIntersection("blue", 600, 600);
+        ic1.addRoute("red","blue", 10);
+        ic1.putSign("red", "blue", 8);
+        ic1.putSign("red","blue", 7);
+    }
 }
