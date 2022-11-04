@@ -8,4 +8,6 @@ comment2.target=int\ solve(int,\ int[][])
 comment3.params=cost\ routesSpeedLimits
 comment3.target=void\ simulate(int,\ int[][])
 comment3.text=\r\n\ This\ method\ should\ simulate\ a\ icpc\ net\ to\ make\ easier\ the\ solution\r\n\ @param\ cost\r\n\ @param\ game\r\n
-numComments=4
+comment4.params=
+comment4.target=void\ showFinalCost()
+numComments=5

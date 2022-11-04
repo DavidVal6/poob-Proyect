@@ -1,4 +1,4 @@
-
+import javax.swing.JOptionPane;
 import java.util.*;
 /**
  * New class
@@ -19,6 +19,7 @@ public class ICPCContest{
             routes.put(touple,routesSpeedLimits[i][2]);
         }
         solve(cost,routesSpeedLimits);
+        showFinalCost();
     }
     public int solve(int cost, int[][] routesSpeedLimits) {
         int velMax = -1;
@@ -77,5 +78,9 @@ public class ICPCContest{
      */
     public void simulate(int cost, int[][] routesSpeedLimits){
         ICPC ic1 = new ICPC(cost, routesSpeedLimits);
+        for
+    }
+    private void showFinalCost(){
+        JOptionPane.showMessageDialog(null, "The final cost was: " + totalCost);
     }
 }

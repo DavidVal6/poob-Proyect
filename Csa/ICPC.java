@@ -441,14 +441,16 @@ public class ICPC
     private void fillPosiciones(){
         int[] pos = {500, 500};
         this.posiciones.put(1, pos);
-        int[] pos2 = {700, 500};
+        int[] pos2 = {600, 500};
         this.posiciones.put(2, pos2);
-        int[] pos3 = {500, 300};
+        int[] pos3 = {380, 350};
         this.posiciones.put(3, pos3);
-        int[] pos4 = {300, 500};
+        int[] pos4 = {500, 350};
         this.posiciones.put(4, pos4);
-        int[] pos5 = {700, 700};
+        int[] pos5 = {620, 350};
         this.posiciones.put(5, pos5);
+        int[] pos6 = {700, 350};
+        this.posiciones.put(6, pos6);
     }
     /**
      * Move the signal over the intersection A
