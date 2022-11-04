@@ -78,7 +78,6 @@ public class ICPCContest{
      */
     public void simulate(int cost, int[][] routesSpeedLimits){
         ICPC ic1 = new ICPC(cost, routesSpeedLimits);
-        for
     }
     private void showFinalCost(){
         JOptionPane.showMessageDialog(null, "The final cost was: " + totalCost);
