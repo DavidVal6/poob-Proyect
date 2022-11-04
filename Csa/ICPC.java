@@ -491,7 +491,7 @@ public class ICPC
      */
     public void delIntersection(String color){
         if(intersectionP.containsKey(color)){
-            intersectionO.get(color).makeInvisible();
+            intersectionP.get(color).makeInvisible();
             ok = true;
         }else{
             JOptionPane.showMessageDialog(null, "This intersection not exists");
